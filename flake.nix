@@ -16,7 +16,11 @@
     supportedSystems = ["x86_64-linux"];
     forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
   in {
-    # overlay = final: prev: import ./overlay.nix {inherit slippi-desktop final prev;};
+    overlay = final: prev:
+      import ./packages {
+        inherit (final) pkgs;
+        inherit slippi-desktop;
+      };
     packages = forAllSystems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
